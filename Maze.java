@@ -49,8 +49,23 @@ public class Maze {
         }
     }
 
+    // Recursive DFS pathfinding
     private static boolean solve(int x, int y) {
-        // recursive pathfinding
+        if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) return false;
+
+        if (maze[x][y] == 'E') return true;
+
+        if (maze[x][y] != ' ' && maze[x][y] != 'S') return false;
+
+        maze[x][y] = '.'; // mark as visited
+
+        // Explore in all directions
+        if (solve(x + 1, y) || solve(x - 1, y) ||
+                solve(x, y + 1) || solve(x, y - 1)) {
+            return true;
+        }
+
+        maze[x][y] = ' '; // backtrack
         return false;
     }
 
