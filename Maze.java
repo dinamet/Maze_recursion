@@ -9,6 +9,7 @@ public class Maze {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        // Input
         try {
             System.out.print("Enter square maze size (odd, >= 11): ");
             size = scanner.nextInt();
@@ -104,6 +105,7 @@ public class Maze {
         return false;
     }
 
+    // Output
     // Display Maze
     private static void printMaze() {
         for (char[] row : maze) {
@@ -114,6 +116,7 @@ public class Maze {
         }
     }
 
+    // Debugging or Optimizing Specific Components
     // Show Path Coordinates
     private static void printPath() {
         System.out.println("Path coordinates:");
