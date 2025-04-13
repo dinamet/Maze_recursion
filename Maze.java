@@ -16,11 +16,17 @@ public class Maze {
             System.out.println("No path found.");
         }
 
+        System.out.println("\nMaze with path:");
         printMaze();
     }
 
+    // Maze generation using recursive backtracking
     private static void generateMaze() {
-        // initialization and start of recursive generation
+        for (int i = 0; i < SIZE; i++) {
+            Arrays.fill(maze[i], '█');
+        }
+
+        carve(1, 1);
     }
 
     private static boolean solve(int x, int y) {
