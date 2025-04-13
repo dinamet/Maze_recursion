@@ -1,62 +1,45 @@
 import java.util.*;
+import java.io.*;
 
 public class Maze {
-    private static char[][] maze;
-    private static final Random rand = new Random();
-    private static int size;
-    private static List<int[]> path = new ArrayList<>();
+
+    static int size;
+    static char[][] maze;
+    static List<int[]> path = new ArrayList<>();
+    static Random rand = new Random();
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Input
-        try {
-            System.out.print("Enter square maze size (odd, >= 11): ");
-            size = scanner.nextInt();
-
-            if (size < 1) {
-                System.out.println("Invalid size. Must be a positive integer.");
-                return;
-            }
-
-            if (size < 11) {
-                System.out.println("Size too small. Using default size 11.");
-                size = 11;
-            } else if (size % 2 == 0) {
-                System.out.println("Even size entered. Using next odd size: " + (size + 1));
-                size++;
-            }
-
-            maze = new char[size][size];
-            generateMaze();
-
-            int startX = 1, startY = 1;
-            int endX = size - 2, endY = size - 2;
-
-            maze[startX][startY] = 'S';
-            maze[endX][endY] = 'E';
-
-            System.out.println("\nGenerated Maze:");
-            printMaze();
-
-            System.out.println("\nSolving the maze...");
-
-            if (solve(startX, startY, endX, endY)) {
-                System.out.println("Path found!");
-                printPath();
-            } else {
-                System.out.println("No path found.");
-            }
-
-            System.out.println("\nMaze with path:");
-            printMaze();
-
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a number.");
+        System.out.print("Enter square maze size (odd number >= 11): ");
+        size = scanner.nextInt();
+        if (size < 11 || size % 2 == 0) {
+            System.out.println("Invalid size. Must be an odd number >= 11.");
+            return;
         }
+
+        maze = new char[size][size];
+        generateMaze();
+
+        int startX = 1, startY = 1;
+        int endX = size - 2, endY = size - 2;
+
+        maze[startX][startY] = 'S'; // Start
+        maze[endX][endY] = 'E';     // Exit
+
+        if (solve(startX, startY, endX, endY)) {
+            System.out.println("Path found!");
+            printPath();
+        } else {
+            System.out.println("No path found.");
+        }
+
+        System.out.println("\nMaze with path:");
+        printMaze();
+
+        // CSV file
+        saveMazeToCSV("maze.csv");
     }
 
-    // Maze Generation
     private static void generateMaze() {
         for (int i = 0; i < size; i++) {
             Arrays.fill(maze[i], '#');
@@ -69,10 +52,10 @@ public class Maze {
         int[] dy = {-2, 2, 0, 0};
         maze[x][y] = ' ';
 
-        Integer[] directions = {0, 1, 2, 3};
-        Collections.shuffle(Arrays.asList(directions), rand);
+        Integer[] dirs = {0, 1, 2, 3};
+        Collections.shuffle(Arrays.asList(dirs), rand);
 
-        for (int dir : directions) {
+        for (int dir : dirs) {
             int nx = x + dx[dir];
             int ny = y + dy[dir];
 
@@ -83,7 +66,6 @@ public class Maze {
         }
     }
 
-    // Recursive Pathfinding
     private static boolean solve(int x, int y, int endX, int endY) {
         if (x < 0 || y < 0 || x >= size || y >= size) return false;
         if (maze[x][y] == 'E') {
@@ -92,7 +74,7 @@ public class Maze {
         }
         if (maze[x][y] != ' ' && maze[x][y] != 'S') return false;
 
-        maze[x][y] = '*';
+        if (maze[x][y] != 'S') maze[x][y] = '*';
         path.add(new int[]{x, y});
 
         if (solve(x + 1, y, endX, endY) || solve(x - 1, y, endX, endY) ||
@@ -101,12 +83,10 @@ public class Maze {
         }
 
         path.remove(path.size() - 1);
-        maze[x][y] = ' ';
+        if (maze[x][y] != 'S') maze[x][y] = ' ';
         return false;
     }
 
-    // Output
-    // Display Maze
     private static void printMaze() {
         for (char[] row : maze) {
             for (char c : row) {
@@ -116,12 +96,26 @@ public class Maze {
         }
     }
 
-    // Debugging or Optimizing Specific Components
-    // Show Path Coordinates
     private static void printPath() {
         System.out.println("Path coordinates:");
         for (int[] p : path) {
             System.out.println("(" + p[0] + ", " + p[1] + ")");
+        }
+    }
+
+    private static void saveMazeToCSV(String filename) {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            for (int i = 0; i < size; i++) {
+                StringBuilder line = new StringBuilder();
+                for (int j = 0; j < size; j++) {
+                    line.append(maze[i][j]);
+                    if (j < size - 1) line.append(",");
+                }
+                writer.println(line);
+            }
+            System.out.println("Maze saved to: " + filename);
+        } catch (Exception e) {
+            System.out.println("Error saving maze to file: " + e.getMessage());
         }
     }
 }
