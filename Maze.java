@@ -89,7 +89,7 @@ public class Maze {
         // If cell is not walkable or already visited
         if (maze[x][y] != ' ' && maze[x][y] != 'S') return false;
 
-        if (maze[x][y] != 'S') maze[x][y] = '*'; // Mark as visited with '*'
+        if (maze[x][y] != 'S') maze[x][y] = '.'; // Mark as visited with '*'
         path.add(new int[]{x, y}); // Add to current path
 
         // Try moving in 4 directions
