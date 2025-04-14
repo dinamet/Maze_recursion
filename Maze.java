@@ -34,6 +34,8 @@ public class Maze {
         System.out.println("\nGenerated Maze:");
         printMaze();
 
+        System.out.println();
+
         // Find path using recursion
         if (solve(startX, startY, endX, endY)) {
             System.out.println("Path found!");
@@ -138,11 +140,12 @@ public class Maze {
                 }
                 writer.println(line);
             }
+            System.out.println();
+
             System.out.println("Maze saved to: " + filename);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Error saving maze to file: " + e.getMessage());
         }
     }
 }
-
-// end
