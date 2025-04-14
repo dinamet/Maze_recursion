@@ -10,6 +10,7 @@ public class Maze {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+
         // Ask user for maze size (must be odd and at least 11)
         System.out.print("Enter square maze size (odd number >= 11): ");
         size = scanner.nextInt();
@@ -29,7 +30,11 @@ public class Maze {
         maze[startX][startY] = 'S'; // Start point
         maze[endX][endY] = 'E';     // Exit point
 
-        // Find path using recursion (DFS)
+        // Print maze before solving
+        System.out.println("\nGenerated Maze:");
+        printMaze();
+
+        // Find path using recursion
         if (solve(startX, startY, endX, endY)) {
             System.out.println("Path found!");
             printPath(); // Print coordinates of the path
